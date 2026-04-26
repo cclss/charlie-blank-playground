@@ -138,7 +138,6 @@ const TetrisGame = (() => {
   let bag;           // remaining pieces in the current 7-bag
 
   let score, level, totalLines;
-  let gameOver;
   let paused;
 
   let dropTimer;     // setTimeout id for gravity
@@ -153,6 +152,9 @@ const TetrisGame = (() => {
 
   // Soft drop state
   let softDropping;
+
+  // Game state machine: 'idle' → 'playing' → 'gameover'
+  let gameState; // 'idle' | 'playing' | 'gameover'
 
   // ---------------------------------------------------------------------------
   // Board helpers
@@ -254,7 +256,7 @@ const TetrisGame = (() => {
   // ---------------------------------------------------------------------------
 
   function movePiece(dRow, dCol) {
-    if (gameOver || paused || !currentPiece) return false;
+    if (gameState !== 'playing' || paused || !currentPiece) return false;
     const test = { ...currentPiece, row: currentPiece.row + dRow, col: currentPiece.col + dCol };
     if (canPlace(test)) {
       currentPiece = test;
@@ -266,7 +268,7 @@ const TetrisGame = (() => {
 
   function rotatePiece(direction) {
     // direction: 1 = clockwise, -1 = counter-clockwise
-    if (gameOver || paused || !currentPiece) return false;
+    if (gameState !== 'playing' || paused || !currentPiece) return false;
 
     const fromRotation = currentPiece.rotation;
     const toRotation = (fromRotation + direction + 4) % 4;
@@ -289,7 +291,7 @@ const TetrisGame = (() => {
   }
 
   function hardDrop() {
-    if (gameOver || paused || !currentPiece) return;
+    if (gameState !== 'playing' || paused || !currentPiece) return;
     const ghostRow = getGhostRow(currentPiece);
     const distance = ghostRow - currentPiece.row;
     score += distance * 2;
@@ -393,7 +395,7 @@ const TetrisGame = (() => {
   }
 
   function gravityTick() {
-    if (gameOver || paused || !currentPiece) return;
+    if (gameState !== 'playing' || paused || !currentPiece) return;
 
     const moved = movePiece(1, 0);
     if (moved) {
@@ -430,7 +432,7 @@ const TetrisGame = (() => {
   }
 
   function dasRepeat() {
-    if (!dasDirection || gameOver || paused) return;
+    if (!dasDirection || gameState !== 'playing' || paused) return;
     const dc = dasDirection === 'left' ? -1 : 1;
     movePiece(0, dc);
     dasTimer = setTimeout(dasRepeat, DAS_REPEAT_MS);
@@ -452,7 +454,7 @@ const TetrisGame = (() => {
     renderBoard();
     renderNext();
     updateHUD();
-    if (!gameOver) {
+    if (gameState === 'playing') {
       animFrameId = requestAnimationFrame(render);
     }
   }
@@ -476,7 +478,7 @@ const TetrisGame = (() => {
     }
 
     // Draw ghost piece
-    if (currentPiece && !gameOver) {
+    if (currentPiece && gameState === 'playing') {
       const ghostRow = getGhostRow(currentPiece);
       const ghostPiece = { ...currentPiece, row: ghostRow };
       const ghostCells = getPieceCells(ghostPiece);
@@ -491,7 +493,7 @@ const TetrisGame = (() => {
     }
 
     // Draw current piece
-    if (currentPiece && !gameOver) {
+    if (currentPiece && gameState === 'playing') {
       const cells = getPieceCells(currentPiece);
       const color = TETROMINOES[currentPiece.type].color;
       for (const [r, c] of cells) {
@@ -518,8 +520,21 @@ const TetrisGame = (() => {
       mainCtx.stroke();
     }
 
-    // Game over overlay
-    if (gameOver) {
+    // Overlays
+    if (gameState === 'idle') {
+      mainCtx.fillStyle = 'rgba(0,0,0,0.8)';
+      mainCtx.fillRect(0, 0, width, height);
+      mainCtx.fillStyle = '#fff';
+      mainCtx.textAlign = 'center';
+      mainCtx.textBaseline = 'middle';
+      mainCtx.font = 'bold 36px sans-serif';
+      mainCtx.fillText('TETRIS', width / 2, height / 2 - 40);
+      mainCtx.font = '16px sans-serif';
+      mainCtx.fillStyle = '#aaa';
+      mainCtx.fillText('Press Enter to start', width / 2, height / 2 + 10);
+    }
+
+    if (gameState === 'gameover') {
       mainCtx.fillStyle = 'rgba(0,0,0,0.7)';
       mainCtx.fillRect(0, 0, width, height);
       mainCtx.fillStyle = '#fff';
@@ -607,7 +622,16 @@ const TetrisGame = (() => {
   // ---------------------------------------------------------------------------
 
   function onKeyDown(e) {
-    if (gameOver) {
+    // Start screen — Enter begins the game
+    if (gameState === 'idle') {
+      if (e.key === 'Enter') {
+        beginPlay();
+      }
+      return;
+    }
+
+    // Game over — R restarts
+    if (gameState === 'gameover') {
       if (e.key === 'r' || e.key === 'R') {
         restartGame();
       }
@@ -662,7 +686,7 @@ const TetrisGame = (() => {
         break;
       case 'ArrowDown':
         softDropping = false;
-        if (!gameOver && !paused) scheduleGravity();
+        if (gameState === 'playing' && !paused) scheduleGravity();
         break;
     }
   }
@@ -672,7 +696,7 @@ const TetrisGame = (() => {
   // ---------------------------------------------------------------------------
 
   function togglePause() {
-    if (gameOver) return;
+    if (gameState !== 'playing') return;
     paused = !paused;
     if (!paused) {
       scheduleGravity();
@@ -694,7 +718,7 @@ const TetrisGame = (() => {
   }
 
   function endGame() {
-    gameOver = true;
+    gameState = 'gameover';
     clearTimeout(dropTimer);
     clearTimeout(lockTimer);
     clearTimeout(dasTimer);
@@ -714,7 +738,6 @@ const TetrisGame = (() => {
     score = 0;
     level = 0;
     totalLines = 0;
-    gameOver = false;
     paused = false;
     softDropping = false;
     dasDirection = null;
@@ -729,15 +752,24 @@ const TetrisGame = (() => {
     animFrameId = null;
   }
 
-  function startGame() {
+  function showIdleScreen() {
     resetState();
+    gameState = 'idle';
+    renderBoard();
+    renderNext();
+    updateHUD();
+  }
+
+  function beginPlay() {
+    resetState();
+    gameState = 'playing';
     spawnNext();
     scheduleGravity();
     animFrameId = requestAnimationFrame(render);
   }
 
   function restartGame() {
-    startGame();
+    beginPlay();
   }
 
   // ---------------------------------------------------------------------------
@@ -769,7 +801,7 @@ const TetrisGame = (() => {
     document.addEventListener('keydown', onKeyDown);
     document.addEventListener('keyup', onKeyUp);
 
-    startGame();
+    showIdleScreen();
   }
 
   return { init };
