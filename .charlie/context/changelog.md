@@ -1,5 +1,14 @@
 # changelog.md
 
+## 2026-04-29 — KeHDErV9uzTX1ffjLnXpIQ
+
+HTML 구조 설계
+'The Type Foundry(활자 주조소)' 컨셉에 맞춰 index.html을 시맨틱 ...
+
+- Create semantic HTML5 structure for The Type Foundry
+
+
+
 > STATUS: CONFIRMED
 
 The path traveled. Charlie auto-records upon each assignment completion.
