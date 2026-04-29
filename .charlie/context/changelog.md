@@ -1,5 +1,14 @@
 # changelog.md
 
+## 2026-04-29 — AkvcjRmDNzMiisJxfKEwlQ
+
+컬러 시스템 CSS 변수 설정
+오프화이트(#F5F0EB), 딥차콜(#1A1A1A), 앤티크골드(...
+
+- Declare color system CSS custom properties and apply across all elements
+
+
+
 ## 2026-04-29 — Um8c46Pyckff4BkILe7Z8A
 
 Google Fonts 연동 및 타이포그래피 시스템 정의
