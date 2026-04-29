@@ -1,5 +1,14 @@
 # changelog.md
 
+## 2026-04-29 — OM8vGQeHeW4VDji9dDU3xw
+
+배경 질감 효과 적용
+CSS(repeating-conic-gradient 또는 SVG 인라인 패턴 등)를 활�...
+
+- Add paper texture/noise grain background effect to style.css
+
+
+
 ## 2026-04-29 — BrPFQWCeOv0MaBS5tIduyw
 
 CSS 레이아웃 구현
