@@ -1,5 +1,14 @@
 # changelog.md
 
+## 2026-04-29 — Um8c46Pyckff4BkILe7Z8A
+
+Google Fonts 연동 및 타이포그래피 시스템 정의
+Google Fonts에서 클래식 세리�...
+
+- Google Fonts 연동 및 타이포그래피 시스템 정의
+
+
+
 ## 2026-04-29 — KeHDErV9uzTX1ffjLnXpIQ
 
 HTML 구조 설계
