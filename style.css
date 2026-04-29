@@ -1,1 +1,149 @@
 /* style.css — The Type Foundry (활자 주조소) */
+
+/* ==========================================================================
+   Typography System
+   - Font families: Playfair Display (display/hero), Cormorant Garamond (body)
+   - Scale: hero → display → h1 → h2 → h3 → body → small → caption
+   ========================================================================== */
+
+:root {
+  /* Font Families */
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-body: 'Cormorant Garamond', Garamond, 'Times New Roman', serif;
+
+  /* Font Weights */
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-black: 900;
+
+  /* Typography Scale (px → rem, base 16px) */
+  --font-size-hero: 8rem;       /* 128px — hero */
+  --font-size-display: 4.5rem;  /* 72px  — display */
+  --font-size-h1: 3rem;         /* 48px  — h1 */
+  --font-size-h2: 2.25rem;      /* 36px  — h2 */
+  --font-size-h3: 1.5rem;       /* 24px  — h3 */
+  --font-size-body: 1.25rem;    /* 20px  — body */
+  --font-size-small: 1rem;      /* 16px  — small */
+  --font-size-caption: 0.875rem;/* 14px  — caption */
+
+  /* Line Heights */
+  --line-height-tight: 1.1;
+  --line-height-snug: 1.25;
+  --line-height-normal: 1.6;
+  --line-height-relaxed: 1.8;
+
+  /* Letter Spacing */
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.05em;
+  --tracking-wider: 0.1em;
+}
+
+/* ==========================================================================
+   Base Typography
+   ========================================================================== */
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-weight: var(--weight-regular);
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--tracking-normal);
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--weight-bold);
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--weight-bold);
+}
+
+h3 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--weight-regular);
+}
+
+small {
+  font-size: var(--font-size-small);
+}
+
+/* ==========================================================================
+   Hero Typography
+   ========================================================================== */
+
+.hero__title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-hero);
+  font-weight: var(--weight-black);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+.hero__subtitle {
+  font-family: var(--font-body);
+  font-size: var(--font-size-display);
+  font-weight: var(--weight-light);
+  line-height: var(--line-height-snug);
+  letter-spacing: var(--tracking-wide);
+}
+
+.hero__specimen {
+  font-family: var(--font-display);
+  font-size: var(--font-size-h1);
+  font-weight: var(--weight-regular);
+  line-height: var(--line-height-snug);
+  letter-spacing: var(--tracking-wider);
+}
+
+/* ==========================================================================
+   Component Typography
+   ========================================================================== */
+
+.btn {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+}
+
+.output__area {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-weight: var(--weight-regular);
+  line-height: var(--line-height-relaxed);
+}
+
+.footer__text {
+  font-family: var(--font-body);
+  font-size: var(--font-size-caption);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--tracking-wide);
+}
+
+/* ==========================================================================
+   Utility: Screen reader only
+   ========================================================================== */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
