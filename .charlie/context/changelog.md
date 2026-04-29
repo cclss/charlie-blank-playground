@@ -1,5 +1,14 @@
 # changelog.md
 
+## 2026-04-29 — BrPFQWCeOv0MaBS5tIduyw
+
+CSS 레이아웃 구현
+Flexbox/CSS Grid로 데스크톱 기준 정적 레이아웃을 구성합�...
+
+- Desktop CSS layout with Flexbox/Grid for The Type Foundry
+
+
+
 ## 2026-04-29 — AkvcjRmDNzMiisJxfKEwlQ
 
 컬러 시스템 CSS 변수 설정
