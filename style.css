@@ -1,12 +1,28 @@
 /* style.css — The Type Foundry (활자 주조소) */
 
 /* ==========================================================================
+   Color System
+   - Three colors only: off-white, deep charcoal, antique gold.
+   - No other color values are permitted outside :root.
+   - Contrast: charcoal on off-white ≈ 13.8:1 (WCAG AAA).
+   - Accent gold on off-white ≈ 2.6:1 — use only on large/bold text or
+     non-text decoration; never as small body text.
+   ========================================================================== */
+
+/* ==========================================================================
    Typography System
    - Font families: Playfair Display (display/hero), Cormorant Garamond (body)
    - Scale: hero → display → h1 → h2 → h3 → body → small → caption
    ========================================================================== */
 
 :root {
+  /* === Color System === */
+  --color-bg: #F5F0EB;
+  --color-text: #1A1A1A;
+  --color-accent: #C9A96E;
+  --color-accent-hover: #B8963D;
+  --color-border: rgba(26, 26, 26, 0.15);
+
   /* Font Families */
   --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
   --font-body: 'Cormorant Garamond', Garamond, 'Times New Roman', serif;
@@ -52,6 +68,8 @@ body {
   font-weight: var(--weight-regular);
   line-height: var(--line-height-normal);
   letter-spacing: var(--tracking-normal);
+  background-color: var(--color-bg);
+  color: var(--color-text);
 }
 
 h1, h2, h3 {
@@ -105,6 +123,7 @@ small {
   font-weight: var(--weight-regular);
   line-height: var(--line-height-snug);
   letter-spacing: var(--tracking-wider);
+  color: var(--color-accent);
 }
 
 /* ==========================================================================
@@ -116,6 +135,31 @@ small {
   font-size: var(--font-size-body);
   font-weight: var(--weight-semibold);
   letter-spacing: var(--tracking-wide);
+  cursor: pointer;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+.btn--primary {
+  background-color: var(--color-accent);
+  color: var(--color-bg);
+  border-color: var(--color-accent);
+}
+
+.btn--primary:hover {
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+
+.btn--secondary {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.btn--secondary:hover {
+  border-color: var(--color-accent);
 }
 
 .output__area {
@@ -123,6 +167,7 @@ small {
   font-size: var(--font-size-body);
   font-weight: var(--weight-regular);
   line-height: var(--line-height-relaxed);
+  border-top: 1px solid var(--color-border);
 }
 
 .footer__text {
@@ -130,6 +175,8 @@ small {
   font-size: var(--font-size-caption);
   font-weight: var(--weight-regular);
   letter-spacing: var(--tracking-wide);
+  color: var(--color-text);
+  border-top: 1px solid var(--color-border);
 }
 
 /* ==========================================================================
