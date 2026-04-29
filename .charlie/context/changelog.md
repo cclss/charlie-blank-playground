@@ -1,5 +1,14 @@
 # changelog.md
 
+## 2026-04-29 — p7fCboX2KmFiv5qOf6bNsw
+
+DOM 요소 참조 설정
+script.js 파일을 생성하고, Phase 1에서 만든 index.html의 핵...
+
+- DOM 요소 참조 설정 in script.js
+
+
+
 ## 2026-04-29 — OM8vGQeHeW4VDji9dDU3xw
 
 배경 질감 효과 적용
