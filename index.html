@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Type Foundry — 활자 주조소</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Hero: Site identity and large-scale typography showcase -->
+  <header class="hero" role="banner">
+    <h1 class="hero__title">The Type Foundry</h1>
+    <p class="hero__subtitle" lang="ko">활자 주조소</p>
+    <p class="hero__specimen" aria-label="Typography specimen">
+      Aa Bb Cc 가 나 다
+    </p>
+  </header>
+
+  <main>
+
+    <!-- Controls: Paragraph count selector -->
+    <section class="controls" aria-labelledby="controls-heading">
+      <h2 id="controls-heading" class="sr-only">생성 옵션</h2>
+
+      <div class="controls__group">
+        <label for="paragraph-count">문단 수</label>
+        <select id="paragraph-count" name="paragraph-count">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3" selected>3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Actions: Generate and Copy buttons -->
+    <section class="actions" aria-labelledby="actions-heading">
+      <h2 id="actions-heading" class="sr-only">작업</h2>
+
+      <div class="actions__group">
+        <button type="button" id="generate-btn" class="btn btn--primary">
+          주조하기
+        </button>
+        <button type="button" id="copy-btn" class="btn btn--secondary" disabled>
+          복사하기
+        </button>
+      </div>
+    </section>
+
+    <!-- Output: Generated text result -->
+    <section class="output" aria-labelledby="output-heading" aria-live="polite">
+      <h2 id="output-heading" class="sr-only">생성 결과</h2>
+
+      <div id="output-area" class="output__area" role="region" aria-label="생성된 텍스트">
+        <!-- Generated paragraphs will be inserted here by script.js -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <p class="footer__text">
+      <small>&copy; 2026 The Type Foundry. 활자를 주조합니다.</small>
+    </p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
