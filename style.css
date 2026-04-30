@@ -301,6 +301,59 @@ main {
 }
 
 /* ==========================================================================
+   Typing Animation — Character-by-character reveal
+   Performance: only transform/opacity animate. GPU-composited.
+   ========================================================================== */
+
+/* Paragraph entrance: fade + rise */
+.output__para {
+  opacity: 0;
+  transform: translateY(1rem);
+  will-change: opacity, transform;
+}
+
+.output__para--visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Blinking cursor — gold caret after the last typed character */
+.typing-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.15em;
+  background-color: var(--color-accent);
+  vertical-align: text-bottom;
+  margin-left: 1px;
+  will-change: opacity;
+  animation: cursor-blink 0.7s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.typing-cursor--done {
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  animation: none;
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Generate button — pulse while typing */
+.btn--generating {
+  animation: btn-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes btn-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.65; }
+}
+
+/* ==========================================================================
    Footer Layout
    ========================================================================== */
 
@@ -522,5 +575,19 @@ main {
     opacity: 1;
     transform: none;
     will-change: auto;
+  }
+
+  .output__para {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
+
+  .typing-cursor {
+    display: none;
+  }
+
+  .btn--generating {
+    animation: none;
   }
 }

@@ -139,27 +139,29 @@
 
 
 // ─────────────────────────────────────────────────────────────────────
-// Text Generation Engine
+// Text Generation Engine — with Character-by-Character Typing Animation
 // ─────────────────────────────────────────────────────────────────────
 
 /**
  * Generation Module
  *
- * Manages the Lorem ipsum paragraph pool and the generate-button
- * lifecycle (clear → disable → populate → re-enable).
+ * Manages the Lorem ipsum paragraph pool, the generate-button lifecycle,
+ * and a cinematic character-by-character typing animation.
  *
- * Paragraphs are randomly selected from the pool without repetition
- * within a single generation run. The typing animation itself is
- * handled by a separate grain; this module only inserts the <p>
- * elements with their text content.
+ * Typing features:
+ *   - Variable speed with natural punctuation pauses
+ *   - Blinking gold cursor that follows the typed position
+ *   - Fade+rise entrance for each paragraph
+ *   - Button shows "주조 중…" with pulse during typing
+ *   - Interrupt support: clicking mid-type completes instantly, then regenerates
+ *   - prefers-reduced-motion: all typing animation is bypassed
+ *   - 60fps: only transform/opacity are animated (no layout thrashing)
  */
 
 (function initGenerationEngine() {
   'use strict';
 
   // ── Paragraph Pool ────────────────────────────────────────────────
-  // Minimum 10 distinct paragraphs. Mix of Korean-infused and classic
-  // Lorem Ipsum to match the bilingual identity of the site.
 
   var PARAGRAPHS = [
     '로렘 입숨은 인쇄 및 조판 산업의 표준 더미 텍스트입니다. 1500년대 이후로 업계의 표준으로 자리 잡아 왔으며, 알려지지 않은 인쇄업자가 활자 견본집을 만들기 위해 활자를 뒤섞은 것에서 시작되었습니다. 전자 조판의 시대에도 그 원형은 변하지 않았습니다.',
@@ -183,11 +185,38 @@
     'Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Cras justo odio, dapibus ut facilisis in, egestas eget quam.'
   ];
 
+  // ── Typing Speed Constants ────────────────────────────────────────
+  // Tuned for a natural, unhurried cadence that feels cinematic
+  // rather than mechanical.
+
+  var CHAR_BASE_DELAY    = 38;   // ms — base per character
+  var CHAR_VARIANCE      = 14;   // ms — ± random jitter for natural feel
+  var PAUSE_PERIOD       = 300;  // ms — full stop, exclamation, question mark
+  var PAUSE_COMMA        = 160;  // ms — comma, semicolon, colon
+  var PAUSE_PARAGRAPH    = 420;  // ms — gap between paragraphs
+  var CURSOR_FADE_DELAY  = 400;  // ms — cursor fade-out after final character
+
+  var PUNCTUATION_LONG  = '.!?';
+  var PUNCTUATION_SHORT = ',;:';
+
+  // ── Button Labels ─────────────────────────────────────────────────
+
+  var BTN_LABEL_DEFAULT    = '주조하기';
+  var BTN_LABEL_GENERATING = '주조 중\u2026'; // 주조 중…
+
+  // ── State ─────────────────────────────────────────────────────────
+
+  var currentAnim = null; // non-null while typing is in progress
+
+  // ── Accessibility ─────────────────────────────────────────────────
+
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
   // ── Helpers ────────────────────────────────────────────────────────
 
   /**
-   * Schedules a callback via requestAnimationFrame + setTimeout.
-   * Mirrors the intro IIFE's helper for consistency.
+   * Schedules a callback via setTimeout → requestAnimationFrame.
+   * Keeps animations vsync-aligned while allowing arbitrary delays.
    */
   function scheduleAfter(ms, callback) {
     setTimeout(function () {
@@ -198,9 +227,6 @@
   /**
    * Returns an array of `count` paragraphs randomly selected from the
    * pool without repetition. Uses Fisher-Yates partial shuffle.
-   *
-   * If count exceeds the pool size, the pool is exhausted without error
-   * (returns all available paragraphs in random order).
    */
   function pickParagraphs(count) {
     var pool = [];
@@ -221,6 +247,16 @@
     return pool.slice(0, max);
   }
 
+  /**
+   * Calculates the typing delay after a given character.
+   * Punctuation gets a longer pause; other characters get a base + jitter.
+   */
+  function charDelay(ch) {
+    if (PUNCTUATION_LONG.indexOf(ch) !== -1)  return PAUSE_PERIOD;
+    if (PUNCTUATION_SHORT.indexOf(ch) !== -1) return PAUSE_COMMA;
+    return CHAR_BASE_DELAY + Math.floor(Math.random() * CHAR_VARIANCE * 2) - CHAR_VARIANCE;
+  }
+
   // ── DOM References ────────────────────────────────────────────────
 
   var generateBtn = document.getElementById('generate-btn');
@@ -228,42 +264,200 @@
   var outputArea  = document.getElementById('output-area');
   var countSelect = document.getElementById('paragraph-count');
 
-  // ── Generation Lifecycle ──────────────────────────────────────────
+  // ── Button State Helpers ──────────────────────────────────────────
+
+  function setButtonGenerating() {
+    generateBtn.textContent = BTN_LABEL_GENERATING;
+    generateBtn.classList.add('btn--generating');
+    generateBtn.disabled = false; // stay enabled for interrupt
+    copyBtn.disabled = true;
+  }
+
+  function setButtonIdle() {
+    generateBtn.textContent = BTN_LABEL_DEFAULT;
+    generateBtn.classList.remove('btn--generating');
+    generateBtn.disabled = false;
+    copyBtn.disabled = false;
+  }
+
+  // ── Instant Completion ────────────────────────────────────────────
 
   /**
-   * Main generation handler.
-   * 1. Clears previous output.
-   * 2. Disables generate button (prevents double-fire).
-   * 3. Populates output with <p> elements.
-   * 4. Re-enables generate button and enables copy button.
+   * Completes any in-progress typing animation instantly.
+   * Fills all remaining paragraph text and removes the cursor.
    */
-  function handleGenerate() {
-    var count = parseInt(countSelect.value, 10) || 3;
-    var paragraphs = pickParagraphs(count);
+  function completeInstantly() {
+    if (!currentAnim) return;
+    var anim = currentAnim;
+    currentAnim = null;
 
-    // Step 1: Clear previous output
-    outputArea.innerHTML = '';
+    // Fill every paragraph with its full text
+    for (var i = 0; i < anim.pEls.length; i++) {
+      // Remove cursor from this paragraph if present
+      var cursor = anim.pEls[i].querySelector('.typing-cursor');
+      if (cursor) cursor.remove();
 
-    // Step 2: Disable generate button during generation
-    generateBtn.disabled = true;
-    copyBtn.disabled = true;
+      // Set full text (replacing any partial text node)
+      anim.pEls[i].textContent = anim.texts[i];
+      anim.pEls[i].classList.add('output__para--visible');
+    }
 
-    // Step 3: Insert paragraphs
+    setButtonIdle();
+  }
+
+  // ── Reduced-Motion Path ───────────────────────────────────────────
+
+  /**
+   * Inserts all paragraphs at once without any animation.
+   * Used when prefers-reduced-motion is active.
+   */
+  function insertInstant(paragraphs) {
     var fragment = document.createDocumentFragment();
-    var i, p;
-    for (i = 0; i < paragraphs.length; i++) {
-      p = document.createElement('p');
+    for (var i = 0; i < paragraphs.length; i++) {
+      var p = document.createElement('p');
+      p.className = 'output__para output__para--visible';
       p.textContent = paragraphs[i];
       fragment.appendChild(p);
     }
     outputArea.appendChild(fragment);
+    setButtonIdle();
+  }
 
-    // Step 4: Re-enable buttons after a frame
-    // scheduleAfter ensures the DOM paint completes before state change.
-    scheduleAfter(0, function () {
-      generateBtn.disabled = false;
-      copyBtn.disabled = false;
+  // ── Typing Engine ─────────────────────────────────────────────────
+
+  /**
+   * Begins the typing animation for one paragraph.
+   * Creates a text node + cursor inside the <p>, then types character
+   * by character via scheduleAfter recursion.
+   */
+  function beginParagraph(anim) {
+    // Guard: animation was cancelled
+    if (currentAnim !== anim) return;
+
+    var pEl  = anim.pEls[anim.pIdx];
+    var text = anim.texts[anim.pIdx];
+
+    // Reveal paragraph container (fade + rise)
+    pEl.classList.add('output__para--visible');
+
+    // Insert empty text node and cursor
+    var textNode = document.createTextNode('');
+    pEl.appendChild(textNode);
+    pEl.appendChild(anim.cursor);
+
+    // Start character loop
+    typeChar(anim, textNode, text, 0);
+  }
+
+  /**
+   * Types a single character, then schedules the next.
+   * When the paragraph is complete, transitions to the next paragraph
+   * or finishes the animation.
+   */
+  function typeChar(anim, textNode, text, idx) {
+    // Guard: animation was cancelled
+    if (currentAnim !== anim) return;
+
+    // Paragraph complete
+    if (idx >= text.length) {
+      anim.pIdx++;
+
+      // More paragraphs?
+      if (anim.pIdx < anim.pEls.length) {
+        // Move cursor to next paragraph after a pause
+        scheduleAfter(PAUSE_PARAGRAPH, function () {
+          beginParagraph(anim);
+        });
+      } else {
+        // All paragraphs typed — fade out cursor, then clean up
+        anim.cursor.classList.add('typing-cursor--done');
+        scheduleAfter(CURSOR_FADE_DELAY, function () {
+          if (anim.cursor.parentNode) anim.cursor.remove();
+          currentAnim = null;
+          setButtonIdle();
+        });
+      }
+      return;
+    }
+
+    // Reveal one character
+    var ch = text[idx];
+    textNode.nodeValue = text.substring(0, idx + 1);
+
+    // Schedule next character with variable delay
+    var delay = charDelay(ch);
+    scheduleAfter(delay, function () {
+      typeChar(anim, textNode, text, idx + 1);
     });
+  }
+
+  // ── Generation Lifecycle ──────────────────────────────────────────
+
+  /**
+   * Kicks off a new generation run.
+   * Creates empty <p> elements, a cursor, and starts the typing loop.
+   */
+  function startGeneration() {
+    var count = parseInt(countSelect.value, 10) || 3;
+    var paragraphs = pickParagraphs(count);
+
+    // Clear previous output
+    outputArea.innerHTML = '';
+
+    // Reduced motion: skip animation entirely
+    if (reducedMotion.matches) {
+      insertInstant(paragraphs);
+      return;
+    }
+
+    // Set button to generating state
+    setButtonGenerating();
+
+    // Create empty paragraph elements
+    var pEls = [];
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < paragraphs.length; i++) {
+      var p = document.createElement('p');
+      p.className = 'output__para';
+      fragment.appendChild(p);
+      pEls.push(p);
+    }
+    outputArea.appendChild(fragment);
+
+    // Create cursor element
+    var cursor = document.createElement('span');
+    cursor.className = 'typing-cursor';
+    cursor.setAttribute('aria-hidden', 'true');
+
+    // Build animation state
+    currentAnim = {
+      pEls:   pEls,
+      texts:  paragraphs,
+      cursor: cursor,
+      pIdx:   0
+    };
+
+    // Begin typing the first paragraph after a brief beat
+    // (allows the first paragraph's entrance transition to start)
+    scheduleAfter(80, function () {
+      beginParagraph(currentAnim);
+    });
+  }
+
+  /**
+   * Click handler for the generate button.
+   * If typing is in progress, completes instantly then starts a new run.
+   */
+  function handleGenerate() {
+    if (currentAnim) {
+      completeInstantly();
+      // Brief pause so the user sees the completed text before it clears
+      scheduleAfter(60, function () {
+        startGeneration();
+      });
+      return;
+    }
+    startGeneration();
   }
 
   // ── Bind ──────────────────────────────────────────────────────────
