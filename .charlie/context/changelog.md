@@ -1,5 +1,15 @@
 # changelog.md
 
+## 2026-04-30 — 6Br2OgurAr_nf0WU4-lpvg
+
+진입 시퀀스 애니메이션 구현
+4단계 시나리오 구현: ① 딥 블랙(#1A1A1A) 전�...
+
+- Intro overlay HTML 구조 및 CSS 애니메이션 정의
+- JavaScript 타이밍 오케스트레이션 및 UI 리빌
+
+
+
 ## 2026-04-29 — OM8vGQeHeW4VDji9dDU3xw
 
 배경 질감 효과 적용
