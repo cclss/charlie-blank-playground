@@ -460,9 +460,93 @@
     startGeneration();
   }
 
+  // ── Clipboard + Ink Spread ─────────────────────────────────────────
+
+  /**
+   * Copies the full text content of #output-area to the clipboard.
+   * Uses the modern Clipboard API with a fallback to document.execCommand.
+   */
+  function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).catch(function () {
+        copyFallback(text);
+      });
+    } else {
+      copyFallback(text);
+    }
+  }
+
+  /**
+   * Fallback clipboard copy via a temporary textarea and execCommand.
+   */
+  function copyFallback(text) {
+    var textarea = document.createElement('textarea');
+    textarea.value = text;
+    // Position off-screen to avoid visual flash
+    textarea.style.position = 'fixed';
+    textarea.style.left = '-9999px';
+    textarea.style.top = '-9999px';
+    textarea.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+      document.execCommand('copy');
+    } catch (e) {
+      // Silently fail — no meaningful recovery available
+    }
+    document.body.removeChild(textarea);
+  }
+
+  /**
+   * Triggers the ink-spread CSS animation on the copy button.
+   * Sets --ink-x and --ink-y custom properties from the click
+   * coordinates so the blot originates from the pointer position.
+   */
+  function triggerInkSpread(btn, event) {
+    var rect = btn.getBoundingClientRect();
+    var x = event.clientX - rect.left;
+    var y = event.clientY - rect.top;
+
+    btn.style.setProperty('--ink-x', x + 'px');
+    btn.style.setProperty('--ink-y', y + 'px');
+
+    // Reset animation: remove class, force reflow, re-add
+    btn.classList.remove('ink-spreading');
+    // Force layout recalculation so the browser recognises a new animation cycle
+    void btn.offsetWidth;
+    btn.classList.add('ink-spreading');
+  }
+
+  /**
+   * Click handler for the copy button.
+   * Copies all generated text and triggers ink-spread visual feedback.
+   */
+  function handleCopy(event) {
+    var text = (outputArea.textContent || '').trim();
+    if (!text) return;
+
+    copyToClipboard(text);
+
+    // Visual feedback — ink blot from click point
+    if (!reducedMotion.matches) {
+      triggerInkSpread(copyBtn, event);
+    }
+  }
+
+  // Clean up ink-spreading class after animation ends
+  if (copyBtn) {
+    copyBtn.addEventListener('animationend', function () {
+      copyBtn.classList.remove('ink-spreading');
+    });
+  }
+
   // ── Bind ──────────────────────────────────────────────────────────
 
   if (generateBtn) {
     generateBtn.addEventListener('click', handleGenerate);
+  }
+
+  if (copyBtn) {
+    copyBtn.addEventListener('click', handleCopy);
   }
 })();
