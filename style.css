@@ -125,9 +125,18 @@
    Base Typography & Page Layout
    ========================================================================== */
 
+html {
+  /* Prevent iOS Safari from inflating text on orientation change */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Prevent horizontal scroll at any viewport width (280px–2560px+) */
+  overflow-x: clip;
+}
+
 body {
   font-family: var(--font-body);
   font-size: var(--font-size-body);
+  overflow-x: clip;
   font-weight: var(--weight-regular);
   line-height: var(--line-height-normal);
   letter-spacing: var(--tracking-normal);
@@ -283,6 +292,7 @@ main {
   border-radius: var(--input-radius);
   padding: var(--input-padding-y) var(--input-padding-x);
   min-height: 44px; /* Touch target minimum */
+  touch-action: manipulation; /* Prevent double-tap zoom on touch devices */
   width: 100%;
   cursor: pointer;
   appearance: none;
@@ -344,6 +354,8 @@ main {
   border-top: 1px solid var(--color-border);
   min-height: 12rem;
   padding-top: var(--space-xl);
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .output__area p {
@@ -375,6 +387,8 @@ main {
   color: var(--color-text);
   border-top: 1px solid var(--color-border);
   padding-top: var(--space-lg);
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* ==========================================================================
@@ -393,6 +407,7 @@ main {
   padding: var(--btn-padding-y) var(--btn-padding-x);
   border-radius: var(--btn-radius);
   min-height: 44px; /* Touch target minimum */
+  touch-action: manipulation; /* Prevent double-tap zoom on touch devices */
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
@@ -417,6 +432,11 @@ main {
   border-color: var(--color-accent-hover);
 }
 
+.btn--primary:active {
+  background-color: var(--color-text);
+  border-color: var(--color-text);
+}
+
 .btn--secondary {
   background-color: var(--color-bg);
   color: var(--color-text);
@@ -425,6 +445,12 @@ main {
 
 .btn--secondary:hover {
   border-color: var(--color-accent);
+}
+
+.btn--secondary:active {
+  background-color: var(--color-text);
+  color: var(--color-bg);
+  border-color: var(--color-text);
 }
 
 /* ==========================================================================
