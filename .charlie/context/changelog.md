@@ -1,5 +1,54 @@
 # changelog.md
 
+## 2026-04-30 — NYzsXIKVieCNdwWz13aKcw
+
+전체적인 스크롤 및 호버 효과 추가
+페이지 스크롤 시 부드러운 패럴랙스...
+
+- Scroll-driven parallax and viewport reveal effects
+- Enhanced hover micro-interactions
+- Final integration polish and artifact registration
+
+
+
+## 2026-04-30 — FA1cBpaweYej0JNrevO8mQ
+
+커스텀 UI 컨트롤 제작
+문단 수 선택용 기본 HTML 요소를 숨기고, 'The Type Fou...
+
+- 커스텀 문단 수 스테퍼 컴포넌트 제작
+
+
+
+## 2026-04-30 — SvmDebW6zzaYCvJGKhYYZg
+
+복사 버튼 클릭 시 잉크 번짐 효과 적용
+'복사' 버튼 클릭 시, 텍스트 피드...
+
+- Implement ink-spread copy feedback with clipboard functionality
+
+
+
+## 2026-04-30 — z3ChU9zPblDxxCnET9Ygjg
+
+텍스트 생성 시 타이핑 효과 적용
+'생성' 버튼 클릭 시, 결과 텍스트가 한 ...
+
+- Text generation engine with Lorem ipsum data
+- Character-by-character typing animation with cursor
+
+
+
+## 2026-04-30 — 6Br2OgurAr_nf0WU4-lpvg
+
+진입 시퀀스 애니메이션 구현
+4단계 시나리오 구현: ① 딥 블랙(#1A1A1A) 전�...
+
+- Intro overlay HTML 구조 및 CSS 애니메이션 정의
+- JavaScript 타이밍 오케스트레이션 및 UI 리빌
+
+
+
 ## 2026-04-29 — OM8vGQeHeW4VDji9dDU3xw
 
 배경 질감 효과 적용

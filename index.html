@@ -17,16 +17,29 @@
 </head>
 <body>
 
+  <!-- Intro: Entry sequence overlay -->
+  <div class="intro" aria-hidden="true">
+    <div class="intro__bg"></div>
+    <div class="intro__text">
+      <span class="intro__char" style="--char-index: 0">L</span>
+      <span class="intro__char" style="--char-index: 1">o</span>
+      <span class="intro__char" style="--char-index: 2">r</span>
+      <span class="intro__char" style="--char-index: 3">e</span>
+      <span class="intro__char" style="--char-index: 4">m</span>
+    </div>
+    <div class="intro__line"></div>
+  </div>
+
   <!-- Hero: Site identity and large-scale typography showcase -->
-  <header class="hero" role="banner">
-    <h1 class="hero__title">The Type Foundry</h1>
-    <p class="hero__subtitle" lang="ko">활자 주조소</p>
-    <p class="hero__specimen" aria-label="Typography specimen">
+  <header class="hero reveal" role="banner">
+    <h1 class="hero__title" data-parallax-speed="0.3">The Type Foundry</h1>
+    <p class="hero__subtitle" data-parallax-speed="0.5" lang="ko">활자 주조소</p>
+    <p class="hero__specimen" data-parallax-speed="0.7" aria-label="Typography specimen">
       Aa Bb Cc 가 나 다
     </p>
   </header>
 
-  <main>
+  <main class="reveal">
 
     <!-- Controls: Paragraph count selector -->
     <section class="controls" aria-labelledby="controls-heading">
@@ -34,13 +47,20 @@
 
       <div class="controls__group">
         <label for="paragraph-count">문단 수</label>
-        <select id="paragraph-count" name="paragraph-count">
+        <select id="paragraph-count" name="paragraph-count" class="sr-only" tabindex="-1">
           <option value="1">1</option>
           <option value="2">2</option>
           <option value="3" selected>3</option>
           <option value="4">4</option>
           <option value="5">5</option>
         </select>
+
+        <!-- Custom Stepper UI — syncs with hidden <select> -->
+        <div class="stepper" role="group" aria-labelledby="controls-heading">
+          <button type="button" class="stepper__btn stepper__btn--dec" aria-label="문단 수 줄이기">−</button>
+          <span class="stepper__value" aria-live="polite" aria-atomic="true">3</span>
+          <button type="button" class="stepper__btn stepper__btn--inc" aria-label="문단 수 늘리기">+</button>
+        </div>
       </div>
     </section>
 
@@ -70,7 +90,7 @@
   </main>
 
   <!-- Footer -->
-  <footer class="footer" role="contentinfo">
+  <footer class="footer reveal" role="contentinfo">
     <p class="footer__text">
       <small>&copy; 2026 The Type Foundry. 활자를 주조합니다.</small>
     </p>
