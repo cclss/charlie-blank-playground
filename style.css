@@ -1,6 +1,33 @@
 /* style.css — The Type Foundry (활자 주조소) */
 
 /* ==========================================================================
+   Browser Support
+   --------------------------------------------------------------------------
+   Target browsers (latest stable as of 2026-04):
+     - Google Chrome  ≥ 120
+     - Mozilla Firefox ≥ 120
+     - Apple Safari    ≥ 17
+
+   Cross-Browser Compatibility Notes:
+     1. appearance: none
+        Vendor prefixes -webkit-appearance and -moz-appearance are included
+        on <select> elements for Safari and Firefox compatibility.
+     2. CSS Custom Properties (--var)
+        Supported in all target browsers. No fallback values needed.
+     3. :focus-visible pseudo-class
+        Supported since Chrome 86, Firefox 85, Safari 15.4.
+     4. Flexbox & CSS Grid
+        Fully supported in all target browsers. No prefixes required.
+     5. clip: rect() in .sr-only
+        Deprecated in favor of clip-path but still functional in all targets.
+        Retained for maximum screen-reader compatibility.
+     6. SVG data-URI background-image (paper texture, select chevron)
+        Supported in all target browsers without issue.
+     7. backdrop-filter / CSS @keyframes animations
+        Not used in this stylesheet. No vendor-prefix concerns apply.
+   ========================================================================== */
+
+/* ==========================================================================
    Color System
    - Three colors only: off-white, deep charcoal, antique gold.
    - No other color values are permitted outside :root.
