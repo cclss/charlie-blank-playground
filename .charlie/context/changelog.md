@@ -1,5 +1,42 @@
 # changelog.md
 
+## 2026-04-30 — 1T-782E6QjbRjN2r6R1llQ
+
+복사 버튼 기능 구현
+'복사' 버튼 클릭 시 출력 영역의 텍스트 전체를 navig...
+
+- Implement clipboard copy on 복사하기 button
+
+
+
+## 2026-04-30 — GxVJs3Y9wQdnhiVeqihWcg
+
+생성 버튼 이벤트 리스너 연결
+'생성' 버튼 클릭 시 문단 수 선택 값을 읽�...
+
+- 생성 버튼 이벤트 리스너 연결 및 결과 렌더링
+
+
+
+## 2026-04-30 — jJrdfXtbaKzY9jgxtBIFzg
+
+Lorem Ipsum 텍스트 생성 로직 구현
+충분한 양의 Lorem Ipsum 원문 데이터를 JS �...
+
+- Implement Lorem Ipsum data and generation function
+- Fix: reviewer issues (loop 1)
+
+
+
+## 2026-04-29 — p7fCboX2KmFiv5qOf6bNsw
+
+DOM 요소 참조 설정
+script.js 파일을 생성하고, Phase 1에서 만든 index.html의 핵...
+
+- DOM 요소 참조 설정 in script.js
+
+
+
 ## 2026-04-29 — OM8vGQeHeW4VDji9dDU3xw
 
 배경 질감 효과 적용
