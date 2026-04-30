@@ -1,6 +1,33 @@
 /* style.css — The Type Foundry (활자 주조소) */
 
 /* ==========================================================================
+   Browser Support
+   --------------------------------------------------------------------------
+   Target browsers (latest stable as of 2026-04):
+     - Google Chrome  ≥ 120
+     - Mozilla Firefox ≥ 120
+     - Apple Safari    ≥ 17
+
+   Cross-Browser Compatibility Notes:
+     1. appearance: none
+        Vendor prefixes -webkit-appearance and -moz-appearance are included
+        on <select> elements for Safari and Firefox compatibility.
+     2. CSS Custom Properties (--var)
+        Supported in all target browsers. No fallback values needed.
+     3. :focus-visible pseudo-class
+        Supported since Chrome 86, Firefox 85, Safari 15.4.
+     4. Flexbox & CSS Grid
+        Fully supported in all target browsers. No prefixes required.
+     5. clip: rect() in .sr-only
+        Deprecated in favor of clip-path but still functional in all targets.
+        Retained for maximum screen-reader compatibility.
+     6. SVG data-URI background-image (paper texture, select chevron)
+        Supported in all target browsers without issue.
+     7. backdrop-filter / CSS @keyframes animations
+        Not used in this stylesheet. No vendor-prefix concerns apply.
+   ========================================================================== */
+
+/* ==========================================================================
    Color System
    - Three colors only: off-white, deep charcoal, antique gold.
    - No other color values are permitted outside :root.
@@ -35,15 +62,16 @@
   --weight-bold: 700;
   --weight-black: 900;
 
-  /* Typography Scale (px → rem, base 16px) */
-  --font-size-hero: 8rem;       /* 128px — hero */
-  --font-size-display: 4.5rem;  /* 72px  — display */
-  --font-size-h1: 3rem;         /* 48px  — h1 */
-  --font-size-h2: 2.25rem;      /* 36px  — h2 */
-  --font-size-h3: 1.5rem;       /* 24px  — h3 */
-  --font-size-body: 1.25rem;    /* 20px  — body */
-  --font-size-small: 1rem;      /* 16px  — small */
-  --font-size-caption: 0.875rem;/* 14px  — caption */
+  /* Typography Scale — mobile-first (px → rem, base 16px)
+     Breakpoints: ≤480px (default) → 481px → 769px → 1025px */
+  --font-size-hero: 3.25rem;      /* 52px  — hero (mobile) */
+  --font-size-display: 2rem;      /* 32px  — display (mobile) */
+  --font-size-h1: 1.75rem;        /* 28px  — h1 (mobile) */
+  --font-size-h2: 1.5rem;         /* 24px  — h2 (mobile) */
+  --font-size-h3: 1.25rem;        /* 20px  — h3 (mobile) */
+  --font-size-body: 1.125rem;     /* 18px  — body (mobile) */
+  --font-size-small: 0.9375rem;   /* 15px  — small (mobile) */
+  --font-size-caption: 0.8125rem; /* 13px  — caption (mobile) */
 
   /* Line Heights */
   --line-height-tight: 1.1;
@@ -57,20 +85,20 @@
   --tracking-wide: 0.05em;
   --tracking-wider: 0.1em;
 
-  /* === Layout System === */
+  /* === Layout System — mobile-first === */
   --layout-max-width: 1200px;
   --layout-content-width: 840px;
-  --layout-gutter: 2rem;
-  --layout-section-gap: 4rem;
+  --layout-gutter: 1rem;
+  --layout-section-gap: 2rem;
 
-  /* Spacing Scale */
-  --space-xs: 0.5rem;    /*  8px */
-  --space-sm: 1rem;       /* 16px */
-  --space-md: 1.5rem;     /* 24px */
-  --space-lg: 2rem;       /* 32px */
-  --space-xl: 3rem;       /* 48px */
-  --space-2xl: 4rem;      /* 64px */
-  --space-3xl: 6rem;      /* 96px */
+  /* Spacing Scale — mobile-first */
+  --space-xs: 0.375rem;   /*  6px */
+  --space-sm: 0.75rem;    /* 12px */
+  --space-md: 1rem;        /* 16px */
+  --space-lg: 1.5rem;      /* 24px */
+  --space-xl: 2rem;        /* 32px */
+  --space-2xl: 2.5rem;     /* 40px */
+  --space-3xl: 3.5rem;     /* 56px */
 
   /* Component Tokens */
   --btn-padding-x: 2rem;
@@ -97,9 +125,18 @@
    Base Typography & Page Layout
    ========================================================================== */
 
+html {
+  /* Prevent iOS Safari from inflating text on orientation change */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Prevent horizontal scroll at any viewport width (280px–2560px+) */
+  overflow-x: clip;
+}
+
 body {
   font-family: var(--font-body);
   font-size: var(--font-size-body);
+  overflow-x: clip;
   font-weight: var(--weight-regular);
   line-height: var(--line-height-normal);
   letter-spacing: var(--tracking-normal);
@@ -150,6 +187,9 @@ small {
   line-height: var(--line-height-tight);
   letter-spacing: var(--tracking-tight);
   margin-bottom: var(--space-md);
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
 }
 
 .hero__subtitle {
@@ -159,6 +199,7 @@ small {
   line-height: var(--line-height-snug);
   letter-spacing: var(--tracking-wide);
   margin-bottom: var(--space-2xl);
+  max-width: 100%;
 }
 
 .hero__specimen {
@@ -169,6 +210,9 @@ small {
   letter-spacing: var(--tracking-wider);
   color: var(--color-accent);
   margin-top: var(--space-lg);
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* ==========================================================================
@@ -195,6 +239,7 @@ main {
    ========================================================================== */
 
 .hero {
+  width: 100%;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -202,22 +247,29 @@ main {
   justify-content: center;
   text-align: center;
   padding: var(--space-3xl) var(--layout-gutter);
+  overflow: hidden;
 }
 
 /* ==========================================================================
    Controls Layout
+   --------------------------------------------------------------------------
+   Mobile-first: vertical stack, full-width select.
+   769px+: horizontal row restored.
    ========================================================================== */
 
 .controls {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
+  width: 100%;
 }
 
 .controls__group {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: var(--space-sm);
+  width: 100%;
 }
 
 .controls__group label {
@@ -230,6 +282,8 @@ main {
 
 .controls__group select {
   font-family: var(--font-body);
+  /* font-size ≥ 16px prevents iOS Safari zoom on focus.
+     Mobile default is 1.125rem (18px) — safe. */
   font-size: var(--font-size-body);
   font-weight: var(--weight-regular);
   color: var(--color-text);
@@ -237,9 +291,13 @@ main {
   border: 1px solid var(--color-border);
   border-radius: var(--input-radius);
   padding: var(--input-padding-y) var(--input-padding-x);
+  min-height: 44px; /* Touch target minimum */
+  touch-action: manipulation; /* Prevent double-tap zoom on touch devices */
+  width: 100%;
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
+  -moz-appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%231A1A1A' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
@@ -257,18 +315,24 @@ main {
 
 /* ==========================================================================
    Actions Layout
+   --------------------------------------------------------------------------
+   Mobile-first: vertical stack, full-width buttons.
+   769px+: horizontal row restored.
    ========================================================================== */
 
 .actions {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
+  width: 100%;
 }
 
 .actions__group {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: var(--space-sm);
+  width: 100%;
 }
 
 /* ==========================================================================
@@ -290,6 +354,8 @@ main {
   border-top: 1px solid var(--color-border);
   min-height: 12rem;
   padding-top: var(--space-xl);
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .output__area p {
@@ -321,6 +387,8 @@ main {
   color: var(--color-text);
   border-top: 1px solid var(--color-border);
   padding-top: var(--space-lg);
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* ==========================================================================
@@ -338,6 +406,8 @@ main {
   color: var(--color-text);
   padding: var(--btn-padding-y) var(--btn-padding-x);
   border-radius: var(--btn-radius);
+  min-height: 44px; /* Touch target minimum */
+  touch-action: manipulation; /* Prevent double-tap zoom on touch devices */
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
@@ -362,6 +432,11 @@ main {
   border-color: var(--color-accent-hover);
 }
 
+.btn--primary:active {
+  background-color: var(--color-text);
+  border-color: var(--color-text);
+}
+
 .btn--secondary {
   background-color: var(--color-bg);
   color: var(--color-text);
@@ -370,6 +445,149 @@ main {
 
 .btn--secondary:hover {
   border-color: var(--color-accent);
+}
+
+.btn--secondary:active {
+  background-color: var(--color-text);
+  color: var(--color-bg);
+  border-color: var(--color-text);
+}
+
+/* ==========================================================================
+   Responsive Breakpoints — Mobile-First
+   --------------------------------------------------------------------------
+   Default (≤480px): values in :root above.
+   481px+:  small tablet / large phone landscape.
+   769px+:  tablet / small desktop.
+   1025px+: full desktop — restores original design-spec values.
+   ========================================================================== */
+
+@media (min-width: 481px) {
+  :root {
+    /* Typography Scale — small tablet */
+    --font-size-hero: 4.5rem;      /* 72px */
+    --font-size-display: 2.75rem;  /* 44px */
+    --font-size-h1: 2.25rem;       /* 36px */
+    --font-size-h2: 1.75rem;       /* 28px */
+    --font-size-h3: 1.375rem;      /* 22px */
+    --font-size-body: 1.1875rem;   /* 19px */
+    --font-size-small: 1rem;       /* 16px */
+    --font-size-caption: 0.875rem; /* 14px */
+
+    /* Layout & Spacing — small tablet */
+    --layout-gutter: 1.5rem;
+    --layout-section-gap: 3rem;
+    --space-xs: 0.5rem;    /*  8px */
+    --space-sm: 0.875rem;  /* 14px */
+    --space-md: 1.25rem;   /* 20px */
+    --space-lg: 1.75rem;   /* 28px */
+    --space-xl: 2.5rem;    /* 40px */
+    --space-2xl: 3rem;     /* 48px */
+    --space-3xl: 4.5rem;   /* 72px */
+  }
+}
+
+@media (min-width: 769px) {
+  :root {
+    /* Typography Scale — tablet / small desktop */
+    --font-size-hero: 6rem;        /* 96px */
+    --font-size-display: 3.5rem;   /* 56px */
+    --font-size-h1: 2.5rem;        /* 40px */
+    --font-size-h2: 2rem;          /* 32px */
+    --font-size-h3: 1.5rem;        /* 24px */
+    --font-size-body: 1.25rem;     /* 20px */
+    --font-size-small: 1rem;       /* 16px */
+    --font-size-caption: 0.875rem; /* 14px */
+
+    /* Layout & Spacing — tablet */
+    --layout-gutter: 1.75rem;
+    --layout-section-gap: 3.5rem;
+    --space-xs: 0.5rem;    /*  8px */
+    --space-sm: 1rem;      /* 16px */
+    --space-md: 1.5rem;    /* 24px */
+    --space-lg: 2rem;      /* 32px */
+    --space-xl: 3rem;      /* 48px */
+    --space-2xl: 3.5rem;   /* 56px */
+    --space-3xl: 5rem;     /* 80px */
+  }
+}
+
+@media (min-width: 1025px) {
+  :root {
+    /* Typography Scale — full desktop (original design-spec values) */
+    --font-size-hero: 8rem;        /* 128px */
+    --font-size-display: 4.5rem;   /* 72px */
+    --font-size-h1: 3rem;          /* 48px */
+    --font-size-h2: 2.25rem;       /* 36px */
+    --font-size-h3: 1.5rem;        /* 24px */
+    --font-size-body: 1.25rem;     /* 20px */
+    --font-size-small: 1rem;       /* 16px */
+    --font-size-caption: 0.875rem; /* 14px */
+
+    /* Layout & Spacing — full desktop (original values) */
+    --layout-gutter: 2rem;
+    --layout-section-gap: 4rem;
+    --space-xs: 0.5rem;    /*  8px */
+    --space-sm: 1rem;      /* 16px */
+    --space-md: 1.5rem;    /* 24px */
+    --space-lg: 2rem;      /* 32px */
+    --space-xl: 3rem;      /* 48px */
+    --space-2xl: 4rem;     /* 64px */
+    --space-3xl: 6rem;     /* 96px */
+  }
+}
+
+/* ==========================================================================
+   Hero Responsive Layout
+   --------------------------------------------------------------------------
+   Ensures hero fits within viewport at all sizes:
+   - Mobile (320px): prevent horizontal overflow, natural text wrapping
+   - Desktop (1025px+): cap content width for visual cohesion on wide screens
+   ========================================================================== */
+
+@media (min-width: 1025px) {
+  .hero__title,
+  .hero__subtitle,
+  .hero__specimen {
+    max-width: var(--layout-max-width);
+  }
+}
+
+/* ==========================================================================
+   Controls, Actions & Output — Responsive Layout
+   --------------------------------------------------------------------------
+   Mobile (default ≤480px): full-width vertical stack.
+   769px+: horizontal row restored, auto-width elements.
+   ========================================================================== */
+
+@media (min-width: 769px) {
+  .controls {
+    align-items: center;
+  }
+
+  .controls__group {
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+  }
+
+  .controls__group select {
+    width: auto;
+  }
+
+  .actions {
+    align-items: center;
+  }
+
+  .actions__group {
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+  }
+
+  .actions__group .btn {
+    width: auto;
+  }
 }
 
 /* ==========================================================================
