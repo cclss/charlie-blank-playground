@@ -1,5 +1,14 @@
 # changelog.md
 
+## 2026-04-30 — SvmDebW6zzaYCvJGKhYYZg
+
+복사 버튼 클릭 시 잉크 번짐 효과 적용
+'복사' 버튼 클릭 시, 텍스트 피드...
+
+- Implement ink-spread copy feedback with clipboard functionality
+
+
+
 ## 2026-04-30 — z3ChU9zPblDxxCnET9Ygjg
 
 텍스트 생성 시 타이핑 효과 적용
