@@ -60,3 +60,11 @@ generateBtn.addEventListener('click', () => {
 
   copyBtn.disabled = false;
 });
+
+// ---------------------------------------------------------------------------
+// 이벤트 리스너: 복사 버튼
+// ---------------------------------------------------------------------------
+copyBtn.addEventListener('click', () => {
+  const text = outputArea.innerText;
+  navigator.clipboard.writeText(text);
+});
