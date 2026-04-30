@@ -1,5 +1,14 @@
 # changelog.md
 
+## 2026-04-30 — 1T-782E6QjbRjN2r6R1llQ
+
+복사 버튼 기능 구현
+'복사' 버튼 클릭 시 출력 영역의 텍스트 전체를 navig...
+
+- Implement clipboard copy on 복사하기 button
+
+
+
 ## 2026-04-30 — GxVJs3Y9wQdnhiVeqihWcg
 
 생성 버튼 이벤트 리스너 연결
