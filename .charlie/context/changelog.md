@@ -1,5 +1,14 @@
 # changelog.md
 
+## 2026-04-30 — FA1cBpaweYej0JNrevO8mQ
+
+커스텀 UI 컨트롤 제작
+문단 수 선택용 기본 HTML 요소를 숨기고, 'The Type Fou...
+
+- 커스텀 문단 수 스테퍼 컴포넌트 제작
+
+
+
 ## 2026-04-30 — SvmDebW6zzaYCvJGKhYYZg
 
 복사 버튼 클릭 시 잉크 번짐 효과 적용
