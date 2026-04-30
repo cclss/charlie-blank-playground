@@ -623,3 +623,130 @@
     copyBtn.addEventListener('click', handleCopy);
   }
 })();
+
+
+// ─────────────────────────────────────────────────────────────────────
+// Scroll Parallax & Viewport Reveal Module
+// ─────────────────────────────────────────────────────────────────────
+
+/**
+ * Scroll Effects Module
+ *
+ * Two independent scroll-driven behaviors:
+ *
+ *   1. Hero Parallax — Elements with [data-parallax-speed] translate
+ *      vertically at different rates as the page scrolls, creating a
+ *      layered depth illusion. Speed 0 = no movement, 1 = full scroll
+ *      speed. Lower values feel further away.
+ *
+ *   2. Viewport Reveal — Below-the-fold sections fade+rise into view
+ *      when they enter the viewport, using IntersectionObserver for
+ *      performant off-main-thread detection.
+ *
+ * Performance:
+ *   - Parallax uses rAF-throttled scroll listener (one rAF per frame max).
+ *   - Only transform is updated (GPU-composited, no layout/paint).
+ *   - IntersectionObserver is passive and fires only on threshold crossing.
+ *   - Respects prefers-reduced-motion: all effects are skipped.
+ */
+
+(function initScrollEffects() {
+  'use strict';
+
+  // ── Accessibility ─────────────────────────────────────────────────
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (reducedMotion.matches) return;
+
+  // ── Hero Parallax ─────────────────────────────────────────────────
+
+  var parallaxElements = document.querySelectorAll('[data-parallax-speed]');
+  var hero = document.querySelector('.hero');
+  var ticking = false;
+
+  /**
+   * Applies parallax translateY to each element based on scroll position.
+   * The offset is: scrollY × (speed - 1), so:
+   *   speed 0.3 → moves upward at 70% of scroll speed (feels far away)
+   *   speed 0.7 → moves upward at 30% of scroll speed (feels closer)
+   * This differential creates the layered depth illusion.
+   */
+  function updateParallax() {
+    ticking = false;
+
+    // Only apply parallax while the hero is in view.
+    // Once scrolled past, no point in updating transforms.
+    if (!hero) return;
+    var heroRect = hero.getBoundingClientRect();
+    if (heroRect.bottom <= 0) return;
+
+    var scrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+    for (var i = 0; i < parallaxElements.length; i++) {
+      var el = parallaxElements[i];
+      var speed = parseFloat(el.getAttribute('data-parallax-speed')) || 0;
+      // Negative offset: slower elements lag behind, creating depth
+      var yOffset = scrollY * (speed - 1);
+      el.style.transform = 'translateY(' + yOffset + 'px)';
+    }
+  }
+
+  /**
+   * Scroll handler — throttled to one rAF per frame.
+   * Prevents layout thrashing from multiple scroll events per frame.
+   */
+  function onScroll() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(updateParallax);
+    }
+  }
+
+  if (parallaxElements.length > 0) {
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  // ── Viewport Reveal (Below-the-Fold Sections) ────────────────────
+
+  /**
+   * Sections to reveal on scroll. These are the direct children of
+   * <main> — all content below the hero fold.
+   * The footer is excluded because it uses the intro .reveal system.
+   * Classes are added via JS to avoid a flash of hidden content
+   * if JS fails to load.
+   */
+  var revealTargets = document.querySelectorAll(
+    'main > .controls, main > .actions, main > .output'
+  );
+
+  if (revealTargets.length > 0 && 'IntersectionObserver' in window) {
+    // Add scroll-reveal class to targets (initially hidden via CSS).
+    // This is done in JS so content is visible if JS is disabled.
+    for (var j = 0; j < revealTargets.length; j++) {
+      revealTargets[j].classList.add('scroll-reveal');
+    }
+
+    var revealObserver = new IntersectionObserver(
+      function (entries) {
+        for (var k = 0; k < entries.length; k++) {
+          if (entries[k].isIntersecting) {
+            entries[k].target.classList.add('scroll-reveal--visible');
+            // Once revealed, stop observing — no need to re-hide
+            revealObserver.unobserve(entries[k].target);
+          }
+        }
+      },
+      {
+        // Trigger when 15% of the element is visible — feels natural,
+        // the element starts appearing before it's fully in frame
+        threshold: 0.15,
+        // Slight negative margin to trigger slightly before the
+        // element reaches the viewport edge
+        rootMargin: '0px 0px -60px 0px'
+      }
+    );
+
+    for (var m = 0; m < revealTargets.length; m++) {
+      revealObserver.observe(revealTargets[m]);
+    }
+  }
+})();
