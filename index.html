@@ -17,8 +17,21 @@
 </head>
 <body>
 
+  <!-- Intro: Entry sequence overlay -->
+  <div class="intro" aria-hidden="true">
+    <div class="intro__bg"></div>
+    <div class="intro__text">
+      <span class="intro__char" style="--char-index: 0">L</span>
+      <span class="intro__char" style="--char-index: 1">o</span>
+      <span class="intro__char" style="--char-index: 2">r</span>
+      <span class="intro__char" style="--char-index: 3">e</span>
+      <span class="intro__char" style="--char-index: 4">m</span>
+    </div>
+    <div class="intro__line"></div>
+  </div>
+
   <!-- Hero: Site identity and large-scale typography showcase -->
-  <header class="hero" role="banner">
+  <header class="hero reveal" role="banner">
     <h1 class="hero__title">The Type Foundry</h1>
     <p class="hero__subtitle" lang="ko">활자 주조소</p>
     <p class="hero__specimen" aria-label="Typography specimen">
@@ -26,7 +39,7 @@
     </p>
   </header>
 
-  <main>
+  <main class="reveal">
 
     <!-- Controls: Paragraph count selector -->
     <section class="controls" aria-labelledby="controls-heading">
@@ -70,7 +83,7 @@
   </main>
 
   <!-- Footer -->
-  <footer class="footer" role="contentinfo">
+  <footer class="footer reveal" role="contentinfo">
     <p class="footer__text">
       <small>&copy; 2026 The Type Foundry. 활자를 주조합니다.</small>
     </p>
