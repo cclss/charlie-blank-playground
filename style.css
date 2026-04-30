@@ -201,6 +201,9 @@ small {
   letter-spacing: var(--tracking-wider);
   color: var(--color-accent);
   margin-top: var(--space-lg);
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* ==========================================================================
@@ -227,6 +230,7 @@ main {
    ========================================================================== */
 
 .hero {
+  width: 100%;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -234,6 +238,7 @@ main {
   justify-content: center;
   text-align: center;
   padding: var(--space-3xl) var(--layout-gutter);
+  overflow: hidden;
 }
 
 /* ==========================================================================
@@ -486,6 +491,22 @@ main {
     --space-xl: 3rem;      /* 48px */
     --space-2xl: 4rem;     /* 64px */
     --space-3xl: 6rem;     /* 96px */
+  }
+}
+
+/* ==========================================================================
+   Hero Responsive Layout
+   --------------------------------------------------------------------------
+   Ensures hero fits within viewport at all sizes:
+   - Mobile (320px): prevent horizontal overflow, natural text wrapping
+   - Desktop (1025px+): cap content width for visual cohesion on wide screens
+   ========================================================================== */
+
+@media (min-width: 1025px) {
+  .hero__title,
+  .hero__subtitle,
+  .hero__specimen {
+    max-width: var(--layout-max-width);
   }
 }
 
