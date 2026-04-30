@@ -1,5 +1,16 @@
 # changelog.md
 
+## 2026-04-30 — NYzsXIKVieCNdwWz13aKcw
+
+전체적인 스크롤 및 호버 효과 추가
+페이지 스크롤 시 부드러운 패럴랙스...
+
+- Scroll-driven parallax and viewport reveal effects
+- Enhanced hover micro-interactions
+- Final integration polish and artifact registration
+
+
+
 ## 2026-04-30 — FA1cBpaweYej0JNrevO8mQ
 
 커스텀 UI 컨트롤 제작
