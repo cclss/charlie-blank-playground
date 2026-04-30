@@ -42,3 +42,21 @@ const paragraphCount = document.getElementById('paragraph-count');
 const generateBtn = document.getElementById('generate-btn');
 const copyBtn = document.getElementById('copy-btn');
 const outputArea = document.getElementById('output-area');
+
+// ---------------------------------------------------------------------------
+// 이벤트 리스너: 생성 버튼
+// ---------------------------------------------------------------------------
+generateBtn.addEventListener('click', () => {
+  const count = parseInt(paragraphCount.value, 10);
+  const paragraphs = generateLoremIpsum(count);
+
+  outputArea.innerHTML = '';
+
+  paragraphs.forEach((text) => {
+    const p = document.createElement('p');
+    p.textContent = text;
+    outputArea.appendChild(p);
+  });
+
+  copyBtn.disabled = false;
+});
