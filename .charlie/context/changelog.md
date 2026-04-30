@@ -1,5 +1,14 @@
 # changelog.md
 
+## 2026-04-30 — GxVJs3Y9wQdnhiVeqihWcg
+
+생성 버튼 이벤트 리스너 연결
+'생성' 버튼 클릭 시 문단 수 선택 값을 읽�...
+
+- 생성 버튼 이벤트 리스너 연결 및 결과 렌더링
+
+
+
 ## 2026-04-30 — jJrdfXtbaKzY9jgxtBIFzg
 
 Lorem Ipsum 텍스트 생성 로직 구현
