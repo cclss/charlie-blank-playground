@@ -243,18 +243,24 @@ main {
 
 /* ==========================================================================
    Controls Layout
+   --------------------------------------------------------------------------
+   Mobile-first: vertical stack, full-width select.
+   769px+: horizontal row restored.
    ========================================================================== */
 
 .controls {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
+  width: 100%;
 }
 
 .controls__group {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: var(--space-sm);
+  width: 100%;
 }
 
 .controls__group label {
@@ -267,6 +273,8 @@ main {
 
 .controls__group select {
   font-family: var(--font-body);
+  /* font-size ≥ 16px prevents iOS Safari zoom on focus.
+     Mobile default is 1.125rem (18px) — safe. */
   font-size: var(--font-size-body);
   font-weight: var(--weight-regular);
   color: var(--color-text);
@@ -274,6 +282,8 @@ main {
   border: 1px solid var(--color-border);
   border-radius: var(--input-radius);
   padding: var(--input-padding-y) var(--input-padding-x);
+  min-height: 44px; /* Touch target minimum */
+  width: 100%;
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
@@ -295,18 +305,24 @@ main {
 
 /* ==========================================================================
    Actions Layout
+   --------------------------------------------------------------------------
+   Mobile-first: vertical stack, full-width buttons.
+   769px+: horizontal row restored.
    ========================================================================== */
 
 .actions {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
+  width: 100%;
 }
 
 .actions__group {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: var(--space-sm);
+  width: 100%;
 }
 
 /* ==========================================================================
@@ -376,6 +392,7 @@ main {
   color: var(--color-text);
   padding: var(--btn-padding-y) var(--btn-padding-x);
   border-radius: var(--btn-radius);
+  min-height: 44px; /* Touch target minimum */
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
@@ -507,6 +524,43 @@ main {
   .hero__subtitle,
   .hero__specimen {
     max-width: var(--layout-max-width);
+  }
+}
+
+/* ==========================================================================
+   Controls, Actions & Output — Responsive Layout
+   --------------------------------------------------------------------------
+   Mobile (default ≤480px): full-width vertical stack.
+   769px+: horizontal row restored, auto-width elements.
+   ========================================================================== */
+
+@media (min-width: 769px) {
+  .controls {
+    align-items: center;
+  }
+
+  .controls__group {
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+  }
+
+  .controls__group select {
+    width: auto;
+  }
+
+  .actions {
+    align-items: center;
+  }
+
+  .actions__group {
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+  }
+
+  .actions__group .btn {
+    width: auto;
   }
 }
 
