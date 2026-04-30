@@ -1,5 +1,15 @@
 # changelog.md
 
+## 2026-04-30 — z3ChU9zPblDxxCnET9Ygjg
+
+텍스트 생성 시 타이핑 효과 적용
+'생성' 버튼 클릭 시, 결과 텍스트가 한 ...
+
+- Text generation engine with Lorem ipsum data
+- Character-by-character typing animation with cursor
+
+
+
 ## 2026-04-30 — 6Br2OgurAr_nf0WU4-lpvg
 
 진입 시퀀스 애니메이션 구현
