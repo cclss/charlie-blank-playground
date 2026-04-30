@@ -540,6 +540,79 @@
     });
   }
 
+  // ── Custom Stepper ─────────────────────────────────────────────────
+
+  /**
+   * Stepper UI Module
+   *
+   * Wires the custom stepper (−/value/+) to the hidden <select>.
+   * The <select> remains the source of truth for paragraph count;
+   * startGeneration reads countSelect.value. The stepper syncs
+   * its display and the select's value on every interaction.
+   */
+
+  var stepperDecBtn   = document.querySelector('.stepper__btn--dec');
+  var stepperIncBtn   = document.querySelector('.stepper__btn--inc');
+  var stepperValueEl  = document.querySelector('.stepper__value');
+
+  /**
+   * Reads the current min/max from the <select> options.
+   * Returns { min: Number, max: Number }.
+   */
+  function getStepperRange() {
+    var options = countSelect.options;
+    return {
+      min: parseInt(options[0].value, 10),
+      max: parseInt(options[options.length - 1].value, 10)
+    };
+  }
+
+  /**
+   * Updates the stepper display and the hidden <select> value.
+   * Disables −/+ buttons at range boundaries.
+   */
+  function syncStepper(newValue) {
+    var range = getStepperRange();
+    var clamped = Math.max(range.min, Math.min(range.max, newValue));
+
+    // Update the hidden <select>
+    countSelect.value = String(clamped);
+
+    // Update visual display
+    stepperValueEl.textContent = String(clamped);
+
+    // Update button disabled states at boundaries
+    stepperDecBtn.disabled = (clamped <= range.min);
+    stepperIncBtn.disabled = (clamped >= range.max);
+  }
+
+  /**
+   * Initializes stepper state from the <select>'s current value.
+   */
+  function initStepper() {
+    if (!countSelect || !stepperDecBtn || !stepperIncBtn || !stepperValueEl) return;
+
+    var initial = parseInt(countSelect.value, 10) || 3;
+    syncStepper(initial);
+
+    stepperDecBtn.addEventListener('click', function () {
+      var current = parseInt(countSelect.value, 10);
+      syncStepper(current - 1);
+    });
+
+    stepperIncBtn.addEventListener('click', function () {
+      var current = parseInt(countSelect.value, 10);
+      syncStepper(current + 1);
+    });
+
+    // If the hidden <select> changes externally, sync the stepper
+    countSelect.addEventListener('change', function () {
+      syncStepper(parseInt(countSelect.value, 10));
+    });
+  }
+
+  initStepper();
+
   // ── Bind ──────────────────────────────────────────────────────────
 
   if (generateBtn) {

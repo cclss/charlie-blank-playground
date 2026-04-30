@@ -256,6 +256,69 @@ main {
 }
 
 /* ==========================================================================
+   Custom Stepper — Paragraph Count Control
+   Replaces native <select> visually. The hidden <select> remains for
+   accessibility fallback; stepper JS keeps values in sync.
+   ========================================================================== */
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--input-radius);
+  overflow: hidden;
+  user-select: none;
+}
+
+.stepper__btn {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-weight: var(--weight-medium);
+  line-height: 1;
+  color: var(--color-text);
+  background-color: transparent;
+  border: none;
+  padding: var(--input-padding-y) 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.stepper__btn:hover {
+  background-color: var(--color-accent);
+  color: var(--color-bg);
+}
+
+.stepper__btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+.stepper__btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.stepper__btn:disabled:hover {
+  background-color: transparent;
+  color: var(--color-text);
+}
+
+.stepper__value {
+  font-family: var(--font-display);
+  font-size: var(--font-size-body);
+  font-weight: var(--weight-semibold);
+  line-height: 1;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text);
+  min-width: 2.5rem;
+  text-align: center;
+  padding: var(--input-padding-y) 0;
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+}
+
+/* ==========================================================================
    Actions Layout
    ========================================================================== */
 
