@@ -1,5 +1,15 @@
 # changelog.md
 
+## 2026-04-30 — NL3GXoZfZ-b2lNoFUSI5LA
+
+크로스 브라우저 테스트
+Chrome, Firefox, Safari 최신 버전에서 전체 기능·레�...
+
+- Cross-browser CSS 전수 감사 및 수정
+- 크로스 브라우저 호환성 검증 보고서 및 브라우저 지원 문서화
+
+
+
 ## 2026-04-29 — OM8vGQeHeW4VDji9dDU3xw
 
 배경 질감 효과 적용
